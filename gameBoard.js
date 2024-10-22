@@ -1,8 +1,9 @@
-const Ship = require('../ship');
+const Ship = require('./ship');
 
 class Gameboard {
     constructor(size = 10) {
         this.size = size;
+        this.grid = this.generateCoords(size)
     }
     generateCoords(size){
         let coordsArr = [];
@@ -12,7 +13,9 @@ class Gameboard {
             for(let y = 0 ; y < size ;y++){
                 row.rowItems.push({
                     x:x,
-                    y:y
+                    y:y,
+                    full:false,
+                    gotHit:false
                 })
             }
             coordsArr.push(row)
@@ -20,6 +23,10 @@ class Gameboard {
         return coordsArr;
     }
     placeShip(coords, length, isVertical = false ){
+        // get full cells from coordate gird
+        // check if genrete cords does not overlap with them 
+        // if ture genrte the ship 
+        //  if false get new set of coords
         const ship = new Ship()
         // creating new ship object and place it -- return the array of ships
     }
