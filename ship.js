@@ -19,9 +19,15 @@ class Ship {
     isSunk(){
         return this.hits === this.length;
     }
-    hit(){
-        if(!this.isSunk())
-        this.hits++;
+    hit(coord){
+        if(!this.isSunk()){
+          this.coords.some((shipCoord)=>{
+            if(shipCoord.x ===coord.x && shipCoord.y === coord.y){
+              this.hits++;
+            }
+          })
+        
+      }
     }
 
   }
