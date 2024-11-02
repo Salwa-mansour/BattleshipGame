@@ -1,0 +1,88 @@
+*,*::after,*::before{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+table{
+    width: 80%;
+    height: 400px;
+    table-layout: fixed;
+    font-size: 40px;
+    text-align: center;
+    table-layout: fixed;
+    /* transform: rotateX(50deg); */
+    border-collapse: collapse;
+  }
+ table tr{
+  height: 40px;
+ }
+   table td{
+      border: 1px solid gray;
+     
+      position: relative;
+  }
+  td[data-full="true"]{
+    background :rgba(128, 128, 128, 0.6);
+  }
+  table tr:first-child{
+      counter-reset: colCounter;
+  }
+
+   table tr:first-child td{
+    counter-increment:colCounter;
+   }
+   table tr:first-child td::after{
+    content:counter(colCounter,upper-alpha);
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    width: 100%;
+    height: 80%;
+    font-size: .3em;
+    padding: 3px;
+    line-height: 2;
+    text-align: center;
+    
+  }
+  table tr td:first-child::before{
+    content:attr(data-row) ;
+    position: absolute;
+    top: 0;
+    right: 100%;
+    width: 100%;
+    height: 100%;
+    font-size: .3em;
+    padding: 5px;
+    line-height: 2;
+    text-align: right;
+    
+  }
+ 
+  .game-container{
+     width: 90vw;
+     height: 90vh;
+     margin: auto;
+     margin-top: 1rem;
+     padding: 1rem;
+     background-color: antiquewhite;
+     display: grid;
+     grid-template-columns:repeat(2,1fr);
+     grid-template-rows: auto;
+     grid-template-areas: 'player1 player2'
+                           'controls' ;
+    justify-items: center;
+    align-items: center;
+    gap: 10px;
+  }
+  .game-container section{
+    background-color: #fff;
+  }
+  .game-container .player-1{
+    grid-area: 'player1';
+  }
+  .game-container .player-2{
+    grid-area: 'player2';
+  }
+  .game-container .controls{
+    grid-area: 'controls';
+  }

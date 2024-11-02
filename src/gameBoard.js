@@ -25,9 +25,10 @@ class Gameboard {
     }
     placeShip( length=4,coordStart = this.rundomizeCoordStarts(length), isVertical = false ){
         const newShip = new Ship(coordStart,length);
+      
         const fullCoords = this.getFullCoords()
         if(this.isOverLapping(fullCoords,newShip.coords)){
-            this.placeShip()
+            this.placeShip(length)
         }else{
             this.ships.push(newShip);
             this.fillingCoords(newShip.coords)
@@ -66,11 +67,22 @@ class Gameboard {
     receiveAttack(coord){
       //  determines whether or not the attack hit a ship and then sends the ‘hit’
       // function to the correct ship, or records the coordinates of the missed shot.
-      //Gameboards should keep track of missed attacks so they can display them properly.
-     const attackedShip =  this.ships.find((ship=> ship.x === coord.x && ship.y === coord.y));
-     attackedShip.hit(coord);
-     this.grid[coord.x].rowItems[coord.y].gotHit = true;
-
+      //Gameboards should keep track of missed attacks so they can display them properly
+      let attackedShip;
+    // const attackedShip =  this.ships.find((ship.coords=> ship.x === coord.x && ship.y === coord.y));
+      for (const ship of this.ships) {
+         if(ship.coords.some((shipCoord)=>shipCoord.x === coord.x && shipCoord.y === coord.y))
+         attackedShip = ship;
+         
+      }
+     
+     if(attackedShip){
+        attackedShip.hit(coord);
+        this.grid[coord.x].rowItems[coord.y].gotHit = true;
+     }else{
+        this.grid[coord.x].rowItems[coord.y].gotHit = true;//miss on board
+     }
+   
     }
    
     getFullCoords(grid = this.grid){
@@ -86,8 +98,9 @@ class Gameboard {
        return fullCoordsArr;
   }
   gameOver(ships = this.ships){
+   
      //Gameboards should be able to report whether or not all of their ships have been sunk.
-     return ships.every((ship)=> ship.sunk === true)
+     return ships.every((ship)=> ship.isSunk())
 
   }
 }

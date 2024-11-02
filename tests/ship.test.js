@@ -1,5 +1,5 @@
 // import { Ship } from "../ship";
-const Ship = require('../ship');
+const Ship = require('../src/ship');
 
 
 const ship1 = new Ship({x:0,y:0},3);

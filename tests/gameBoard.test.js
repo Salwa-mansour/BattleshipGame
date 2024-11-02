@@ -1,4 +1,4 @@
-const Gameboard = require('../gameBoard');
+const Gameboard = require('../src/gameBoard');
 
 const Gameboard1 = new Gameboard(1);
 
