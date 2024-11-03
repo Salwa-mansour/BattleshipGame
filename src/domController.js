@@ -7,9 +7,10 @@
 import player from './player'
 import Gameboard from './gameBoard';
 
-const computer = new player('computer');
 const you = new player('you');
+const computer = new player('computer');
 let computerTurn = false;
+const yourBoard = document.querySelector('.player-1 tbody')
 const computerBoard = document.querySelector('.player-2 tbody');
 
 function generateBoard(domTable,coords){
@@ -51,12 +52,13 @@ function sendHit(domTarget,coord){
     }else{
      targetPlayer = computer
     }
-   
+    domTarget.dataset.gotHit = true;
     targetPlayer.gameBoard.receiveAttack(coord);
 
     displayHitOnBoard(targetPlayer,coord,domTarget);
     if(targetPlayer.gameBoard.gameOver()){
-        overGame()
+        const winner = computerTurn ? computer : you ;
+        overGame(winner.name)
     }
     computerTurn = !computerTurn;
 }
@@ -74,9 +76,20 @@ function displayHitOnBoard(targetPlayer,coord,domTarget){
 function computerHit(){
     //target you board
     // set random attack that is not repeated
+    const attackCoords={
+        x:Math.round(Math.random()* ( you.gameBoard.size - 1) ) ,
+        y:Math.round(Math.random()* ( you.gameBoard.size - 1) )
+    };
+   
+    const attackedDomItem =yourBoard.querySelector(`td[data-row="${attackCoords.x}"][data-col="${attackCoords.y}"]`);
+    if(!attackedDomItem.dataset.gotHit){
+        sendHit(attackedDomItem,attackCoords);
+    }else{
+        computerHit();
+    }
 }
-function overGame(){
-        alert('game over')
+function overGame(winner){
+        console.log(`${winner} is the Winner !`)
 }
 function setRandomShips(player){
     player.generateRandomShips();
@@ -96,12 +109,14 @@ function renderBoardShips(player,board){
 
 computerBoard.addEventListener('click',(e)=>{
     if(!e.target.matches('td')) return;
-    if(computerTurn){console.log('computer turn'); computerTurn = !computerTurn; return;} 
+    if(e.target.dataset.gotHit){ return;} 
     
      sendHit(e.target,
              {x:parseInt(e.target.dataset.row) ,
               y:parseInt(e.target.dataset.col) }
             );
+     // make computer play after the real player       
+    computerHit();
 });
 export {
     gameSetUp,

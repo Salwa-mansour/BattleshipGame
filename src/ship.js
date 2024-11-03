@@ -17,7 +17,7 @@ class Ship {
       return coords;
     }
     isSunk(){
-      console.log(this)
+     console.log(this)
       // console.log(this.hits , this.length)
       // console.log(this.hits == this.length)
       if(this.hits === this.length){
