@@ -14,19 +14,29 @@ class Player{
 
     // }
     generateRandomShips(){
+        //reset to empty
+       this.resetShips();
         this.gameBoard.placeShip(4);
         this.gameBoard.placeShip(3);
         this.gameBoard.placeShip(2);
         this.gameBoard.placeShip(1);
     }
+    resetShips(){
+        this.gameBoard.ships = [];
+      // const fullCoords = this.gameBoard.getFullCoords();
+       this.gameBoard.grid.forEach(row => {
+            row.rowItems.forEach((coord)=>{
+               coord.full = false;
+               coord.gotHit = false;
+            }) 
+       });
+    }
     randomAttak(){
         let point = {
-            x:Math.round(Math.random()* (this.gameBoard.size)) ,
-            y:Math.round(Math.random()* (this.gameBoard.size))
+            x:Math.round(Math.random()* (this.gameBoard.size- 1)) ,
+            y:Math.round(Math.random()* (this.gameBoard.size- 1))
         }
-        if(this.gameBoard.grid[point.x].rowItems[point.y].gotHit){
-            this.randomAttak();
-        }
+      
         return point;
     }
 }

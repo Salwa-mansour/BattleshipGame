@@ -17,23 +17,20 @@ class Ship {
       return coords;
     }
     isSunk(){
-     console.log(this)
+    //  console.log(this)
       // console.log(this.hits , this.length)
       // console.log(this.hits == this.length)
       if(this.hits === this.length){
         this.sunk = true;
       }
-        return this.hits === this.length;
+        return this.sunk;
     }
-    hit(coord){
-       
+    hit(coord){    
           this.coords.some((shipCoord)=>{
             if(shipCoord.x ===coord.x && shipCoord.y === coord.y){
               this.hits++;
             }
-          })
-        
-      
+          })  
     }
 
   }

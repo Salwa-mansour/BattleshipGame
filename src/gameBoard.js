@@ -24,6 +24,7 @@ class Gameboard {
         return coordsArr;
     }
     placeShip( length=4,coordStart = this.rundomizeCoordStarts(length), isVertical = false ){
+       
         const newShip = new Ship(coordStart,length);
       
         const fullCoords = this.getFullCoords()
@@ -65,6 +66,7 @@ class Gameboard {
     }
 
     receiveAttack(coord){
+       
       //  determines whether or not the attack hit a ship and then sends the ‘hit’
       // function to the correct ship, or records the coordinates of the missed shot.
       //Gameboards should keep track of missed attacks so they can display them properly
@@ -98,7 +100,7 @@ class Gameboard {
        return fullCoordsArr;
   }
   gameOver(ships = this.ships){
-   
+ 
      //Gameboards should be able to report whether or not all of their ships have been sunk.
      return ships.every((ship)=> ship.isSunk())
 

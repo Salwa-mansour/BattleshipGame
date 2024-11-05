@@ -7,11 +7,14 @@
 import player from './player'
 import Gameboard from './gameBoard';
 
-const you = new player('you');
-const computer = new player('computer');
+let you
+let computer 
+let startGame = false
 let computerTurn = false;
 const yourBoard = document.querySelector('.player-1 tbody')
 const computerBoard = document.querySelector('.player-2 tbody');
+const randomShipsBtn = document.querySelector('.random-btn');
+const startBtn = document.querySelector('.start-btn')
 
 function generateBoard(domTable,coords){
    const html = coords.map((row)=>{
@@ -28,7 +31,9 @@ function generateBoard(domTable,coords){
    domTable.innerHTML = html;
 }
 function gameSetUp(){
-   
+    you = new player('you');
+    computer = new player('computer');
+
     generateBoard(
      document.querySelector('.player-1 tbody'),
      you.gameBoard.grid
@@ -43,6 +48,8 @@ function gameSetUp(){
    setRandomShips(computer);
    renderBoardShips(you,document.querySelector('.player-1 tbody'))
    renderBoardShips(computer,document.querySelector('.player-2 tbody'))
+   console.table(computer.gameBoard.getFullCoords())
+ 
 }
 
 function sendHit(domTarget,coord){
@@ -66,22 +73,21 @@ function displayHitOnBoard(targetPlayer,coord,domTarget){
         if(targetPlayer.gameBoard.grid[coord.x].rowItems[coord.y].gotHit &&
            targetPlayer.gameBoard.grid[coord.x].rowItems[coord.y].full ){
              //display hit
-             domTarget.innerText ="x"
+             console.log(targetPlayer.gameBoard.grid[coord.x].rowItems[coord.y]);
+             domTarget.innerText ="x";
            }else if(targetPlayer.gameBoard.grid[coord.x].rowItems[coord.y].gotHit &&
                     !targetPlayer.gameBoard.grid[coord.x].rowItems[coord.y].full){
              //display miss
-             domTarget.innerText="o"
+             console.log(targetPlayer.gameBoard.grid[coord.x].rowItems[coord.y]);
+             domTarget.innerText="o";
            }
 }
 function computerHit(){
     //target you board
     // set random attack that is not repeated
-    const attackCoords={
-        x:Math.round(Math.random()* ( you.gameBoard.size - 1) ) ,
-        y:Math.round(Math.random()* ( you.gameBoard.size - 1) )
-    };
+    const attackCoords = you.randomAttak();
    
-    const attackedDomItem =yourBoard.querySelector(`td[data-row="${attackCoords.x}"][data-col="${attackCoords.y}"]`);
+    const attackedDomItem = yourBoard.querySelector(`td[data-row="${attackCoords.x}"][data-col="${attackCoords.y}"]`);
     if(!attackedDomItem.dataset.gotHit){
         sendHit(attackedDomItem,attackCoords);
     }else{
@@ -89,25 +95,33 @@ function computerHit(){
     }
 }
 function overGame(winner){
-        console.log(`${winner} is the Winner !`)
+    confirm(`${winner} is the Winner !`)
+    startGame = false;
+    gameSetUp();
 }
 function setRandomShips(player){
     player.generateRandomShips();
 }
 function renderBoardShips(player,board){
-  
     player.gameBoard.ships.forEach(ship=>{
-       
        for(const coord of ship.coords) {
             board.querySelector(` td[data-row="${coord.x}"][data-col="${coord.y}"]`).dataset.full = true;
         }  
     })
 }
-  
+function boardReset(board){
+   const targets = board.querySelectorAll('td[data-full="true"]')
+   targets.forEach(target=>{
+    delete target.dataset.full
+   })
+}
+function gameReset(){
 
+}
 
 
 computerBoard.addEventListener('click',(e)=>{
+    if(!startGame) return ;
     if(!e.target.matches('td')) return;
     if(e.target.dataset.gotHit){ return;} 
     
@@ -115,9 +129,21 @@ computerBoard.addEventListener('click',(e)=>{
              {x:parseInt(e.target.dataset.row) ,
               y:parseInt(e.target.dataset.col) }
             );
-     // make computer play after the real player       
-    computerHit();
+   // check if the game running => no winner  // make computer play after the real player       
+   if(startGame) computerHit();
 });
+randomShipsBtn.addEventListener('click',()=>{
+
+    if(startGame) return;
+    boardReset(yourBoard)//start with clean board
+    setRandomShips(you);
+    renderBoardShips(you,document.querySelector('.player-1 tbody'))
+
+});
+startBtn.addEventListener('click',()=>{
+    if(startGame) return;
+    startGame = true;
+})
 export {
     gameSetUp,
     generateBoard,
