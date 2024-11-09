@@ -58,8 +58,9 @@ class Gameboard {
     }
 
     fillingCoords(newCoords){
+       
         newCoords.forEach((newCoord)=>{
-          (this.grid[newCoord.x].rowItems[newCoord.y])['full'] = true;
+          this.grid[newCoord.x].rowItems[newCoord.y].full = true;
         //   console.log(this.grid[newCoord.x].rowItems[newCoord.y])
         }) 
        
@@ -100,10 +101,8 @@ class Gameboard {
        return fullCoordsArr;
   }
   gameOver(ships = this.ships){
- 
      //Gameboards should be able to report whether or not all of their ships have been sunk.
-     return ships.every((ship)=> ship.isSunk())
-
+     return ships.every((ship)=> ship.isSunk());
   }
 }
 // const g= new Gameboard();

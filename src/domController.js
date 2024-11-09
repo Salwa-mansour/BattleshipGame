@@ -7,21 +7,23 @@
 import player from './player'
 import Gameboard from './gameBoard';
 
-let you
-let computer 
-let startGame = false
+let you;
+let computer ;
+let winner;
+let startGame ;
 let computerTurn = false;
-const yourBoard = document.querySelector('.player-1 tbody')
+const yourBoard = document.querySelector('.player-1 tbody');
 const computerBoard = document.querySelector('.player-2 tbody');
 const randomShipsBtn = document.querySelector('.random-btn');
-const startBtn = document.querySelector('.start-btn')
+const startBtn = document.querySelector('.start-btn');
 
 function generateBoard(domTable,coords){
    const html = coords.map((row)=>{
         return`
         <tr>
             ${row.rowItems.map(coord=>{
-                return `<td data-row="${coord.x}" data-col="${coord.y}" ></td>`;
+                return `<td data-row="${coord.x}" data-col="${coord.y}" >   
+                        </td>`;
                 
             }).join('')
              }
@@ -31,8 +33,12 @@ function generateBoard(domTable,coords){
    domTable.innerHTML = html;
 }
 function gameSetUp(){
+    startGame = true;
     you = new player('you');
     computer = new player('computer');
+
+    setRandomShips(you);
+    setRandomShips(computer);
 
     generateBoard(
      document.querySelector('.player-1 tbody'),
@@ -42,13 +48,8 @@ function gameSetUp(){
      document.querySelector('.player-2 tbody'),
      computer.gameBoard.grid
     );
-
-   
-   setRandomShips(you);
-   setRandomShips(computer);
    renderBoardShips(you,document.querySelector('.player-1 tbody'))
    renderBoardShips(computer,document.querySelector('.player-2 tbody'))
-   console.table(computer.gameBoard.getFullCoords())
  
 }
 
@@ -64,7 +65,7 @@ function sendHit(domTarget,coord){
 
     displayHitOnBoard(targetPlayer,coord,domTarget);
     if(targetPlayer.gameBoard.gameOver()){
-        const winner = computerTurn ? computer : you ;
+         winner = computerTurn ? computer : you ;
         overGame(winner.name)
     }
     computerTurn = !computerTurn;
@@ -73,12 +74,10 @@ function displayHitOnBoard(targetPlayer,coord,domTarget){
         if(targetPlayer.gameBoard.grid[coord.x].rowItems[coord.y].gotHit &&
            targetPlayer.gameBoard.grid[coord.x].rowItems[coord.y].full ){
              //display hit
-             console.log(targetPlayer.gameBoard.grid[coord.x].rowItems[coord.y]);
-             domTarget.innerText ="x";
+           domTarget.innerText ="x";
            }else if(targetPlayer.gameBoard.grid[coord.x].rowItems[coord.y].gotHit &&
                     !targetPlayer.gameBoard.grid[coord.x].rowItems[coord.y].full){
              //display miss
-             console.log(targetPlayer.gameBoard.grid[coord.x].rowItems[coord.y]);
              domTarget.innerText="o";
            }
 }
@@ -86,7 +85,6 @@ function computerHit(){
     //target you board
     // set random attack that is not repeated
     const attackCoords = you.randomAttak();
-   
     const attackedDomItem = yourBoard.querySelector(`td[data-row="${attackCoords.x}"][data-col="${attackCoords.y}"]`);
     if(!attackedDomItem.dataset.gotHit){
         sendHit(attackedDomItem,attackCoords);
@@ -95,19 +93,27 @@ function computerHit(){
     }
 }
 function overGame(winner){
-    confirm(`${winner} is the Winner !`)
+    // confirm(`${winner} is the Winner !`)
+    const dialog = document.querySelector(".show-winner");
+    const okbtn = dialog.querySelector('.ok-btn');
+    dialog.querySelector('p').innerHTML = `${winner} is the Winner !`; 
+    startBtn.innerText = 'Resetart Game';
+    dialog.show() // Opens a non-modal dialog
+    okbtn.addEventListener('click',()=>{
+        dialog.close();
+       
+    })
     startGame = false;
-    gameSetUp();
+ 
+  //  gameReset()
 }
 function setRandomShips(player){
     player.generateRandomShips();
 }
 function renderBoardShips(player,board){
-    player.gameBoard.ships.forEach(ship=>{
-       for(const coord of ship.coords) {
-            board.querySelector(` td[data-row="${coord.x}"][data-col="${coord.y}"]`).dataset.full = true;
-        }  
-    })
+    player.gameBoard.getFullCoords().forEach(coord=>{
+            board.querySelector(` td[data-row="${coord.x}"][data-col="${coord.y}"]`).dataset.full = true;       
+    });
 }
 function boardReset(board){
    const targets = board.querySelectorAll('td[data-full="true"]')
@@ -116,7 +122,7 @@ function boardReset(board){
    })
 }
 function gameReset(){
-
+    window.location.reload();
 }
 
 
@@ -143,6 +149,9 @@ randomShipsBtn.addEventListener('click',()=>{
 startBtn.addEventListener('click',()=>{
     if(startGame) return;
     startGame = true;
+    if(winner){
+        gameReset();
+    }
 })
 export {
     gameSetUp,
