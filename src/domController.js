@@ -49,7 +49,7 @@ function gameSetUp(){
      computer.gameBoard.grid
     );
    renderBoardShips(you,document.querySelector('.player-1 tbody'))
-   renderBoardShips(computer,document.querySelector('.player-2 tbody'))
+//    renderBoardShips(computer,document.querySelector('.player-2 tbody'))
  
 }
 
@@ -98,7 +98,7 @@ function overGame(winner){
     const okbtn = dialog.querySelector('.ok-btn');
     dialog.querySelector('p').innerHTML = `${winner} is the Winner !`; 
     startBtn.innerText = 'Resetart Game';
-    dialog.show() // Opens a non-modal dialog
+    dialog.showModal(); // Opens a non-modal dialog
     okbtn.addEventListener('click',()=>{
         dialog.close();
        
