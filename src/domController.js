@@ -33,7 +33,7 @@ function generateBoard(domTable,coords){
    domTable.innerHTML = html;
 }
 function gameSetUp(){
-    startGame = true;
+  //  startGame = true;
     you = new player('you');
     computer = new player('computer');
 
@@ -127,8 +127,8 @@ function gameReset(){
 
 
 computerBoard.addEventListener('click',(e)=>{
-    if(!startGame) return ;
-    if(!e.target.matches('td')) return;
+    if(!startGame ){startGame = true} 
+        if(!e.target.matches('td')) return;
     if(e.target.dataset.gotHit){ return;} 
     
      sendHit(e.target,
@@ -139,8 +139,7 @@ computerBoard.addEventListener('click',(e)=>{
    if(startGame) computerHit();
 });
 randomShipsBtn.addEventListener('click',()=>{
-
-    if(startGame) return;
+    if(startGame || winner) return;
     boardReset(yourBoard)//start with clean board
     setRandomShips(you);
     renderBoardShips(you,document.querySelector('.player-1 tbody'))

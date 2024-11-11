@@ -181,3 +181,12 @@ dialog::backdrop{
   background-color:  rgba(0, 0, 145, 0.6);
 
 }
+
+@media (max-width: 900px) {
+  .game-container{
+    grid-template-areas: 'player2 player2'
+                          'player1 player1'
+                         'controls controls' ;
+  }
+}
+
